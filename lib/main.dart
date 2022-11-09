@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_complete_guide/widgets/lista_transacoes.dart';
 import 'package:flutter_complete_guide/widgets/nova_transacao.dart';
 import './widgets/lista_transacoes.dart';
@@ -7,6 +8,11 @@ import 'models/transacoes.dart';
 
 
 void main(){
+  WidgetsFlutterBinding.ensureInitialized();
+  SystemChrome.setPreferredOrientations([
+    DeviceOrientation.portraitUp,
+    DeviceOrientation.portraitDown,
+    ]);
   runApp(MyApp());
 }
 class MyApp extends StatelessWidget{
@@ -94,9 +100,9 @@ class MyHomePageState extends State<MyHomePage>{
     },);
 
   }
+  bool mostraGrafico = false;
   Widget build (BuildContext context){
-    return Scaffold(
-        appBar: AppBar(
+    final appBar=AppBar(
           backgroundColor: Colors.purple,
           title: Text("Aplicativo", style: TextStyle(fontFamily: 'Quicksand')),
           actions: <Widget>[
@@ -105,14 +111,52 @@ class MyHomePageState extends State<MyHomePage>{
               onPressed: ()=>startAddNewTransaction(context),
             ),
           ],
-          ),
+          );
+    return Scaffold(
+        appBar: appBar,
         body: SingleChildScrollView(
           child:Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget> [
-              Grafico(_recenteTransacao),
-              ListTransaction(transacaoUsuario, deleteTransaction)
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget> [
+                Text('Mostrar gráfico'),
+                Switch(
+                  thumbColor: MaterialStateProperty.resolveWith(
+                    (states){
+                      if(states.contains(MaterialState.disabled)){
+                        return Colors.purple.withOpacity(.48);
+                      }else{
+                        return Colors.purple;
+                      }
+                    }
+                    ),
+                  value: mostraGrafico, 
+                  onChanged:(valor){
+                  setState(()=>mostraGrafico=valor);
+                } ),
+              ],),
+              mostraGrafico ? 
+              Column(children: [
+                Container(
+                height: (MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.3,
+                child:Grafico(_recenteTransacao)
+                ),
+              Container(
+                height:(MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
+                child:ListTransaction(transacaoUsuario, deleteTransaction)
+                )
+              ],)
+              :
+              Column(children: [
+                Container(
+                height:(MediaQuery.of(context).size.height - appBar.preferredSize.height - MediaQuery.of(context).padding.top) * 0.7,
+                child:ListTransaction(transacaoUsuario, deleteTransaction)
+                )
+              ],)
+              
           ],),),
           floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
           floatingActionButton: FloatingActionButton(

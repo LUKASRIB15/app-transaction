@@ -11,7 +11,8 @@ class ListTransaction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       width: double.infinity,
-      height: 300,
+      //Calculando tamanhos dinamicamente
+      height: MediaQuery.of(context).size.height * 0.6,
       child: transacao.isEmpty? 
         Column(
           crossAxisAlignment: CrossAxisAlignment.center,

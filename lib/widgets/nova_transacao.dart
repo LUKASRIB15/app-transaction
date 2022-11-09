@@ -54,7 +54,7 @@ class NewTransactionState extends State <NewTransaction>{
   }
   @override
   Widget build(BuildContext context) {
-    return  SingleChildScrollView(child:Card(
+    return Card(
                 elevation:5,
                 child:Container(
                   padding: EdgeInsets.all(10),
@@ -102,6 +102,6 @@ class NewTransactionState extends State <NewTransaction>{
                         child: Text("Adicionar transação"),
                         onPressed: submitDados,                        
                       ),
-              ]),),),);
+              ]),),);
   }
 }
